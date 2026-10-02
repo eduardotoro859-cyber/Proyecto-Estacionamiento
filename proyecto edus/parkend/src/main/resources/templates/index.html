@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkend Pro - Control de Estacionamiento</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/parkend.css}">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at top right, #1b3554 0%, #12243b 55%, #0a1524 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 24px;
+        }
+        .landing-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 24px 50px -10px rgba(10, 21, 36, 0.45);
+            max-width: 500px;
+            width: 100%;
+            padding: 48px 36px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .landing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #12243b 0%, #c77d2e 100%);
+        }
+        .landing-logo {
+            height: 76px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+        .btn-enter {
+            background: linear-gradient(135deg, #12243b 0%, #1c3554 100%);
+            color: #ffffff;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px -4px rgba(18, 36, 59, 0.35);
+        }
+        .btn-enter:hover {
+            background: linear-gradient(135deg, #c77d2e 0%, #ad671e 100%);
+            transform: translateY(-2px);
+            color: #ffffff;
+            box-shadow: 0 10px 24px -4px rgba(199, 125, 46, 0.45);
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-card">
+        <img th:src="@{/images/logo.png}" alt="Logo Oficial Parkend Pro" class="landing-logo">
+        <h2 class="fw-bold mb-2" style="color: #12243b;">Sistema de Gestión</h2>
+        <p class="text-muted mb-4" style="font-size: 0.95rem;">
+            Control integral de accesos, cálculo automatizado de tarifas y arqueo de caja para estacionamientos.
+        </p>
+        <div class="d-grid gap-2">
+            <a th:href="@{/vehiculos}" class="btn-enter justify-content-center">
+                <span>Ingresar al Sistema</span>
+                <i class="fa-solid fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

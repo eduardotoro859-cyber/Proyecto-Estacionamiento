@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkend Pro - Historial y Caja</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/parkend.css}">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #12243b;
+            min-height: 100vh;
+        }
+        .top-navbar {
+            background: linear-gradient(135deg, #0a1524 0%, #12243b 60%, #1b3554 100%);
+            padding: 12px 32px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(10, 21, 36, 0.25);
+            border-bottom: 3px solid #c77d2e;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .top-navbar .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .top-navbar .brand-logo {
+            height: 54px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+            transition: transform 0.2s ease;
+            display: block;
+        }
+        .metric-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 22px 24px;
+            box-shadow: 0 4px 18px rgba(18, 36, 59, 0.05);
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(18, 36, 59, 0.1);
+        }
+        .metric-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+        .metric-card.border-navy::after { background: #12243b; }
+        .metric-card.border-green::after { background: #10b981; }
+        .metric-card.border-amber::after { background: #c77d2e; }
+
+        .metric-label {
+            font-size: 0.76rem;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .metric-value {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #12243b;
+            margin-top: 2px;
+        }
+        .content-card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(18, 36, 59, 0.05);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .table-custom thead th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 14px 18px;
+            border-bottom: 1.5px solid #e2e8f0;
+        }
+        .table-custom tbody td {
+            padding: 14px 18px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.88rem;
+            vertical-align: middle;
+        }
+        .table-custom tbody tr:hover td {
+            background: #f8fafc;
+        }
+        .badge-tipo {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-carro  { background: #edf2f8; color: #12243b; border: 1px solid #cbd5e1; }
+        .badge-moto   { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .badge-camion { background: #fff8f0; color: #925313; border: 1px solid #f8dab8; }
+        .placa-badge {
+            font-family: monospace;
+            font-weight: 800;
+            font-size: 0.88rem;
+            background: #12243b;
+            color: #f8fafc;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #0a1524;
+        }
+        .btn-panel-back {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 9px;
+            padding: 8px 16px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-panel-back:hover {
+            background: #c77d2e;
+            border-color: #c77d2e;
+            color: #ffffff;
+        }
+        .btn-logout-top {
+            background: rgba(239, 68, 68, 0.12);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 9px;
+            padding: 8px 14px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-logout-top:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-navbar">
+    <div class="brand-group">
+        <a th:href="@{/vehiculos}" style="display: flex; align-items: center;">
+            <img th:src="@{/images/logo-white.png}" alt="Logo Oficial Parkend Pro" class="brand-logo">
+        </a>
+        <div class="d-none d-md-block" style="border-left: 1px solid rgba(255, 255, 255, 0.2); height: 28px;"></div>
+        <div class="d-none d-md-block">
+            <div class="fw-bold" style="font-size: 0.95rem;">Historial y Caja Operativa</div>
+            <small style="color: #cbd5e1; font-size: 0.74rem;">Cuenta activa: <strong class="text-white" th:text="${usuarioActivo}">admin</strong></small>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a th:href="@{/vehiculos}" class="btn-panel-back">
+            <i class="fa-solid fa-arrow-left me-1"></i> Panel Principal
+        </a>
+        <a th:href="@{/usuarios}" class="btn-panel-back">
+            <i class="fa-solid fa-users-gear me-1"></i> Usuarios
+        </a>
+        <a th:href="@{/logout}" class="btn-logout-top">
+            <i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Salir
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid py-4 px-lg-5">
+
+    <!-- Tarjetas de Resumen -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="metric-card border-navy">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="metric-label">Vehículos Atendidos</div>
+                        <div class="metric-value" style="color: #12243b;" th:text="${#lists.size(historial)}">0</div>
+                        <small class="text-muted">Total de salidas registradas</small>
+                    </div>
+                    <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(18, 36, 59, 0.07); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: #12243b;">
+                        <i class="fa-solid fa-car-side"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card border-green">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="metric-label">Caja Sesión Actual</div>
+                        <div class="metric-value text-success"
+                             th:text="${'$ ' + #numbers.formatDecimal(totalRecaudado, 1, 'POINT', 2, 'POINT')}">$ 0.00</div>
+                        <small class="text-muted">Cobrado durante la sesión de trabajo activa</small>
+                    </div>
+                    <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(16, 185, 129, 0.1); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: #10b981;">
+                        <i class="fa-solid fa-cash-register"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card border-amber">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="metric-label" style="color: #c77d2e;">Histórico Acumulado Total</div>
+                        <div class="metric-value" style="color: #ad671e;"
+                             th:text="${'$ ' + #numbers.formatDecimal(totalHistorico, 1, 'POINT', 2, 'POINT')}">$ 0.00</div>
+                        <small class="text-muted">Total histórico registrado en tu cuenta</small>
+                    </div>
+                    <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(199, 125, 46, 0.1); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: #c77d2e;">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Historial -->
+    <div class="content-card">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background: #ffffff;">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-clipboard-list" style="color: #c77d2e; font-size: 1.1rem;"></i>
+                <span class="fw-bold fs-6" style="color: #12243b;">Registro Detallado de Cobros</span>
+            </div>
+            <small class="text-muted">Salidas ordenadas cronológicamente</small>
+        </div>
+        <div class="table-responsive">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Placa</th>
+                        <th>Tipo</th>
+                        <th>Vehículo</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Tiempo</th>
+                        <th class="text-end">Total Cobrado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(historial)}">
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <div class="mb-2">
+                                <img th:src="@{/images/logo-icon.png}" alt="Parkend" style="width: 48px; height: 48px; opacity: 0.6;">
+                            </div>
+                            <div class="fw-semibold">Aún no se han registrado cobros o salidas en esta cuenta.</div>
+                        </td>
+                    </tr>
+                    <tr th:each="h : ${historial}">
+                        <td class="text-muted" th:text="${h.id}">1</td>
+                        <td><span class="placa-badge" th:text="${h.placa}">ZZ999ZW</span></td>
+                        <td>
+                            <span class="badge-tipo"
+                                  th:classappend="${h.tipo == 'MOTO' ? 'badge-moto' : (h.tipo == 'CAMION' ? 'badge-camion' : 'badge-carro')}"
+                                  th:text="${h.tipo}">CARRO</span>
+                        </td>
+                        <td th:text="${h.marca + ' ' + h.modelo}">TOYOTA COROLLA</td>
+                        <td class="small text-muted" th:text="${h.horaEntrada}">2026-09-30 08:00</td>
+                        <td class="small text-muted" th:text="${h.horaSalida}">2026-09-30 09:30</td>
+                        <td><strong style="color: #c77d2e;" th:text="${h.tiempoFormateado}">1h 30m</strong></td>
+                        <td class="text-end fw-bold text-success fs-6"
+                            th:text="${'$ ' + #numbers.formatDecimal(h.totalPagado, 1, 'POINT', 2, 'POINT')}">$ 4.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

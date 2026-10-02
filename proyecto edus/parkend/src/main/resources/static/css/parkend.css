@@ -1,0 +1,645 @@
+/* ==========================================================================
+   PARKEND PRO - Official Design System & Theme Stylesheet
+   Palette derived from official Parkend brand identity:
+   - Primary Navy: #12243b
+   - Secondary Amber/Ochre: #c77d2e
+   ========================================================================== */
+
+:root {
+    /* Brand Colors */
+    --pk-navy: #12243b;
+    --pk-navy-dark: #0a1524;
+    --pk-navy-deep: #070e18;
+    --pk-navy-light: #1b3554;
+    --pk-navy-surface: #22436a;
+    --pk-navy-border: #2a5282;
+
+    --pk-amber: #c77d2e;
+    --pk-amber-dark: #ad671e;
+    --pk-amber-light: #df9140;
+    --pk-amber-soft: #fef7ef;
+    --pk-amber-border: #f8dab8;
+    --pk-amber-glow: rgba(199, 125, 46, 0.28);
+
+    /* Neutral Colors */
+    --pk-bg: #f8fafc;
+    --pk-card-bg: #ffffff;
+    --pk-border: #e2e8f0;
+    --pk-border-subtle: #edf2f7;
+    --pk-text-primary: #12243b;
+    --pk-text-secondary: #475569;
+    --pk-text-muted: #64748b;
+    --pk-text-light: #94a3b8;
+
+    /* Functional Accents */
+    --pk-success: #10b981;
+    --pk-success-dark: #059669;
+    --pk-success-soft: #ecfdf5;
+    --pk-danger: #ef4444;
+    --pk-danger-dark: #dc2626;
+    --pk-danger-soft: #fef2f2;
+    --pk-info: #0284c7;
+    --pk-info-soft: #f0f9ff;
+
+    /* Radius & Elevation */
+    --pk-radius-sm: 8px;
+    --pk-radius-md: 12px;
+    --pk-radius-lg: 18px;
+    --pk-radius-xl: 24px;
+    --pk-shadow-sm: 0 2px 6px rgba(18, 36, 59, 0.04);
+    --pk-shadow-md: 0 6px 18px rgba(18, 36, 59, 0.08);
+    --pk-shadow-lg: 0 16px 36px rgba(18, 36, 59, 0.12);
+    --pk-shadow-xl: 0 24px 50px -12px rgba(18, 36, 59, 0.25);
+}
+
+/* Base Reset & Typography */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--pk-bg);
+    color: var(--pk-text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   BRAND LOGO STYLES
+   ========================================================================== */
+
+.brand-logo-navbar {
+    height: 54px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+    display: block;
+}
+
+.brand-logo-navbar:hover {
+    transform: scale(1.02);
+}
+
+.brand-logo-login {
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 4px 12px rgba(18, 36, 59, 0.08));
+}
+
+.brand-logo-ticket {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+}
+
+/* ==========================================================================
+   NAVIGATION BAR
+   ========================================================================== */
+
+.pk-navbar {
+    background: linear-gradient(135deg, var(--pk-navy-dark) 0%, var(--pk-navy) 60%, var(--pk-navy-light) 100%);
+    padding: 12px 28px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(10, 21, 36, 0.25);
+    border-bottom: 2px solid var(--pk-amber);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.pk-navbar .brand-container {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.pk-navbar .brand-text-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.pk-navbar .brand-tagline {
+    font-size: 0.72rem;
+    color: #cbd5e1;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.pk-navbar .user-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 30px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #f1f5f9;
+}
+
+.pk-navbar .user-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--pk-amber);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--pk-amber);
+}
+
+.btn-pk-nav {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--pk-radius-sm);
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.btn-pk-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-pk-nav-primary {
+    background: linear-gradient(135deg, var(--pk-amber) 0%, var(--pk-amber-dark) 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px var(--pk-amber-glow);
+}
+
+.btn-pk-nav-primary:hover {
+    background: linear-gradient(135deg, var(--pk-amber-light) 0%, var(--pk-amber) 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px var(--pk-amber-glow);
+}
+
+.btn-pk-logout {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: var(--pk-radius-sm);
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-pk-logout:hover {
+    background: var(--pk-danger);
+    color: #ffffff;
+    border-color: var(--pk-danger);
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   METRIC & STAT CARDS
+   ========================================================================== */
+
+.pk-metric-card {
+    background: var(--pk-card-bg);
+    border-radius: var(--pk-radius-md);
+    padding: 22px 24px;
+    box-shadow: var(--pk-shadow-sm);
+    border: 1px solid var(--pk-border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.pk-metric-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--pk-shadow-md);
+}
+
+.pk-metric-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+}
+
+.pk-metric-card.card-navy::after { background: var(--pk-navy); }
+.pk-metric-card.card-amber::after { background: var(--pk-amber); }
+.pk-metric-card.card-green::after { background: var(--pk-success); }
+
+.pk-metric-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--pk-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.icon-navy { background: #f0f4f9; color: var(--pk-navy); }
+.icon-amber { background: var(--pk-amber-soft); color: var(--pk-amber); }
+.icon-green { background: var(--pk-success-soft); color: var(--pk-success-dark); }
+
+.pk-metric-label {
+    font-size: 0.76rem;
+    color: var(--pk-text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.pk-metric-value {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--pk-navy);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-top: 2px;
+}
+
+.pk-metric-footnote {
+    font-size: 0.76rem;
+    color: var(--pk-text-light);
+    margin-top: 4px;
+}
+
+/* ==========================================================================
+   CONTENT CARDS
+   ========================================================================== */
+
+.pk-content-card {
+    background: var(--pk-card-bg);
+    border-radius: var(--pk-radius-md);
+    box-shadow: var(--pk-shadow-sm);
+    border: 1px solid var(--pk-border);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.pk-card-header {
+    padding: 16px 22px;
+    background: #ffffff;
+    border-bottom: 1.5px solid var(--pk-border);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--pk-navy);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pk-card-body {
+    padding: 22px;
+}
+
+/* ==========================================================================
+   BUTTONS & FORMS
+   ========================================================================== */
+
+.btn-pk-primary {
+    background: linear-gradient(135deg, var(--pk-navy) 0%, var(--pk-navy-light) 100%);
+    border: 1px solid var(--pk-navy);
+    color: #ffffff;
+    padding: 11px 20px;
+    border-radius: var(--pk-radius-sm);
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(18, 36, 59, 0.25);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-pk-primary:hover {
+    background: linear-gradient(135deg, var(--pk-navy-light) 0%, var(--pk-navy) 100%);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(18, 36, 59, 0.35);
+}
+
+.btn-pk-amber {
+    background: linear-gradient(135deg, var(--pk-amber) 0%, var(--pk-amber-dark) 100%);
+    border: none;
+    color: #ffffff;
+    padding: 11px 20px;
+    border-radius: var(--pk-radius-sm);
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px var(--pk-amber-glow);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-pk-amber:hover {
+    background: linear-gradient(135deg, var(--pk-amber-light) 0%, var(--pk-amber) 100%);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px var(--pk-amber-glow);
+}
+
+.btn-pk-success {
+    background: linear-gradient(135deg, var(--pk-success) 0%, var(--pk-success-dark) 100%);
+    border: none;
+    color: #ffffff;
+    border-radius: var(--pk-radius-sm);
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.btn-pk-success:hover {
+    background: linear-gradient(135deg, #34d399 0%, var(--pk-success) 100%);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
+
+.btn-pk-cancel {
+    background: var(--pk-danger-soft);
+    color: var(--pk-danger-dark);
+    border: 1px solid #fecaca;
+    border-radius: var(--pk-radius-sm);
+    padding: 7px 12px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.btn-pk-cancel:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.form-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--pk-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.form-control, .form-select {
+    border: 1.5px solid var(--pk-border);
+    border-radius: var(--pk-radius-sm);
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+    color: var(--pk-text-primary);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #ffffff;
+    border-color: var(--pk-navy);
+    box-shadow: 0 0 0 3px rgba(18, 36, 59, 0.12);
+    outline: none;
+}
+
+/* ==========================================================================
+   TABLES & BADGES
+   ========================================================================== */
+
+.table-custom {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-custom thead th {
+    background: #f8fafc;
+    color: var(--pk-text-muted);
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 14px 20px;
+    border-bottom: 1.5px solid var(--pk-border);
+}
+
+.table-custom tbody td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--pk-border-subtle);
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+.table-custom tbody tr:hover td {
+    background: #f8fafc;
+}
+
+.placa-badge {
+    font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+    font-weight: 800;
+    font-size: 0.95rem;
+    background: var(--pk-navy);
+    color: #ffffff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    letter-spacing: 1.5px;
+    display: inline-block;
+    border: 1px solid var(--pk-navy-dark);
+    box-shadow: 0 2px 4px rgba(18, 36, 59, 0.15);
+}
+
+.badge-tipo {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.badge-carro {
+    background: #f0f4f9;
+    color: var(--pk-navy);
+    border: 1px solid #d0dbe8;
+}
+
+.badge-moto {
+    background: var(--pk-success-soft);
+    color: var(--pk-success-dark);
+    border: 1px solid #a7f3d0;
+}
+
+.badge-camion {
+    background: var(--pk-amber-soft);
+    color: var(--pk-amber-dark);
+    border: 1px solid var(--pk-amber-border);
+}
+
+/* ==========================================================================
+   LOGIN & AUTH CARDS
+   ========================================================================== */
+
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top right, var(--pk-navy-light) 0%, var(--pk-navy) 40%, var(--pk-navy-dark) 100%);
+    padding: 24px;
+}
+
+.auth-card {
+    background: #ffffff;
+    border-radius: var(--pk-radius-xl);
+    box-shadow: var(--pk-shadow-xl);
+    width: 100%;
+    max-width: 440px;
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--pk-navy) 0%, var(--pk-amber) 100%);
+}
+
+.auth-logo-wrap {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.auth-logo-img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.auth-title {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--pk-navy);
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+}
+
+.auth-subtitle {
+    color: var(--pk-text-muted);
+    font-size: 0.88rem;
+    margin-bottom: 24px;
+}
+
+.auth-hint {
+    background: var(--pk-amber-soft);
+    border-radius: var(--pk-radius-sm);
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: var(--pk-amber-dark);
+    margin-top: 20px;
+    border-left: 3px solid var(--pk-amber);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ==========================================================================
+   TICKET STYLES
+   ========================================================================== */
+
+.ticket-container {
+    background: #ffffff;
+    border-radius: var(--pk-radius-xl);
+    box-shadow: var(--pk-shadow-lg);
+    width: 100%;
+    max-width: 520px;
+    overflow: hidden;
+    border: 1px solid var(--pk-border);
+}
+
+.ticket-header-pk {
+    background: linear-gradient(135deg, var(--pk-navy-dark) 0%, var(--pk-navy) 70%, var(--pk-navy-light) 100%);
+    color: #ffffff;
+    padding: 26px 24px;
+    text-align: center;
+    border-bottom: 3px solid var(--pk-amber);
+}
+
+.total-box-pk {
+    background: var(--pk-amber-soft);
+    border: 1.5px solid var(--pk-amber-border);
+    border-radius: var(--pk-radius-md);
+    padding: 18px 22px;
+    margin: 22px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-amount-pk {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--pk-amber-dark);
+}
+
+/* Rate Display Chips */
+.rates-display-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.rate-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #1e293b;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 3px 9px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(18, 36, 59, 0.04);
+}
+
+.rate-chip i {
+    font-size: 0.82rem;
+}
+
+.rate-chip strong {
+    color: #c77d2e;
+    font-weight: 700;
+}
+

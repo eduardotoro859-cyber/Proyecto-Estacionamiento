@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkend Pro - Iniciar Sesión</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/parkend.css}">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at top right, #1b3554 0%, #12243b 55%, #0a1524 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 24px;
+            color: #12243b;
+        }
+        .login-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 24px 50px -10px rgba(10, 21, 36, 0.45);
+            width: 100%;
+            max-width: 430px;
+            padding: 40px 36px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #12243b 0%, #1b3554 50%, #c77d2e 100%);
+        }
+        .brand-logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .brand-logo-img {
+            height: 72px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.25s ease;
+        }
+        .brand-logo-img:hover {
+            transform: scale(1.03);
+        }
+        .subtitle {
+            color: #64748b;
+            font-size: 0.88rem;
+            margin-bottom: 26px;
+            font-weight: 500;
+        }
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .form-control {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background-color: #f8fafc;
+        }
+        .form-control:focus {
+            background-color: #ffffff;
+            border-color: #12243b;
+            box-shadow: 0 0 0 4px rgba(18, 36, 59, 0.12);
+            outline: none;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #12243b 0%, #1c3554 100%);
+            border: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.98rem;
+            padding: 13px;
+            border-radius: 12px;
+            width: 100%;
+            margin-top: 14px;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px -4px rgba(18, 36, 59, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #1c3554 0%, #12243b 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px -4px rgba(18, 36, 59, 0.45);
+            color: #ffffff;
+        }
+        .alert-custom {
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border: none;
+        }
+        .register-link {
+            color: #c77d2e;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .register-link:hover {
+            color: #9c5c16;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="text-center">
+            <div class="brand-logo-container">
+                <img th:src="@{/images/logo.png}" alt="Logo Oficial Parkend Pro" class="brand-logo-img">
+            </div>
+            <div class="subtitle">Control Inteligente de Estacionamiento</div>
+        </div>
+
+        <!-- Alerta de sesión requerida -->
+        <div th:if="${param.error != null and param.error[0] == 'auth'}" class="alert alert-warning alert-custom text-center" role="alert">
+            <i class="fa-solid fa-lock me-2"></i> Inicia sesión para acceder a tu cuenta.
+        </div>
+
+        <!-- Alerta de Cierre de Sesión -->
+        <div th:if="${param.logout != null}" class="alert alert-info alert-custom text-center" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> Has cerrado sesión correctamente.
+        </div>
+
+        <!-- Alerta de Error si las credenciales fallan -->
+        <div th:if="${error}" class="alert alert-danger alert-custom text-center" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> <span th:text="${error}">Usuario o contraseña incorrectos.</span>
+        </div>
+
+        <!-- Alerta de Éxito al registrarse -->
+        <div th:if="${exito}" class="alert alert-success alert-custom text-center" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> <span th:text="${exito}">Registro exitoso.</span>
+        </div>
+
+        <!-- Formulario de Login -->
+        <form th:action="@{/login}" method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="username" name="username" required placeholder="Ingresa tu usuario" autofocus autocomplete="username">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" required placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-submit">
+                <span>Ingresar al Panel</span>
+                <i class="fa-solid fa-arrow-right ms-2"></i>
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <span class="text-muted small">¿No tienes cuenta?</span>
+            <a th:href="@{/registro-usuario}" class="register-link ms-1">Crear Cuenta</a>
+        </div>
+    </div>
+</body>
+</html>

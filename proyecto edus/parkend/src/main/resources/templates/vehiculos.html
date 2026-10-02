@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Parkend Pro - Sistema Profesional de Gestión y Control de Estacionamiento">
+    <title>Parkend Pro - Panel de Control</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/parkend.css}">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #12243b;
+            min-height: 100vh;
+        }
+
+        /* Navbar Superior con Identidad Parkend */
+        .top-navbar {
+            background: linear-gradient(135deg, #0a1524 0%, #12243b 60%, #1b3554 100%);
+            padding: 12px 32px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(10, 21, 36, 0.25);
+            border-bottom: 3px solid #c77d2e;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .top-navbar .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+        .top-navbar .brand-logo {
+            height: 54px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+            transition: transform 0.2s ease;
+            display: block;
+        }
+        .top-navbar .brand-logo:hover {
+            transform: scale(1.03);
+        }
+        .top-navbar .brand-divider {
+            width: 1.5px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .top-navbar .brand-sub {
+            font-size: 0.88rem;
+            color: #e2e8f0;
+            letter-spacing: 0.4px;
+            font-weight: 600;
+        }
+        .top-navbar .user-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 30px;
+            padding: 6px 16px;
+            font-size: 0.84rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f8fafc;
+        }
+        .user-dot {
+            width: 9px;
+            height: 9px;
+            background: #c77d2e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #c77d2e;
+        }
+
+        /* Botones de Navegación */
+        .btn-nav-action {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .btn-nav-action:hover {
+            background: #c77d2e;
+            border-color: #c77d2e;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(199, 125, 46, 0.35);
+        }
+        .btn-nav-logout {
+            background: rgba(239, 68, 68, 0.12);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-nav-logout:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            transform: translateY(-1px);
+        }
+
+        /* Tarjetas de Métricas */
+        .metric-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 22px 24px;
+            box-shadow: 0 4px 18px rgba(18, 36, 59, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(18, 36, 59, 0.1);
+        }
+        .metric-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+        .metric-card.card-navy::after { background: #12243b; }
+        .metric-card.card-green::after { background: #10b981; }
+        .metric-card.card-amber::after { background: #c77d2e; }
+
+        .metric-icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .icon-navy { background: #edf2f8; color: #12243b; }
+        .icon-green { background: #ecfdf5; color: #059669; }
+        .icon-amber { background: #fff8f0; color: #c77d2e; }
+
+        .metric-label {
+            font-size: 0.76rem;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .metric-value {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #12243b;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+        .metric-footnote {
+            font-size: 0.76rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Tarjetas de Contenido */
+        .content-card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(18, 36, 59, 0.05);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .card-header-custom {
+            padding: 18px 24px;
+            background: #ffffff;
+            border-bottom: 1.5px solid #edf2f7;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #12243b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body-custom {
+            padding: 24px;
+        }
+
+        /* Formularios */
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .form-control, .form-select {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 11px;
+            padding: 11px 14px;
+            font-size: 0.92rem;
+            transition: all 0.2s ease;
+            background-color: #f8fafc;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #ffffff;
+            border-color: #12243b;
+            box-shadow: 0 0 0 3.5px rgba(18, 36, 59, 0.12);
+            outline: none;
+        }
+        .btn-registrar {
+            background: linear-gradient(135deg, #12243b 0%, #1c3554 100%);
+            border: none;
+            color: white;
+            padding: 13px;
+            border-radius: 11px;
+            font-weight: 700;
+            font-size: 0.96rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 18px -4px rgba(18, 36, 59, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-registrar:hover {
+            background: linear-gradient(135deg, #1c3554 0%, #12243b 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px -4px rgba(18, 36, 59, 0.45);
+            color: white;
+        }
+
+        /* Tabla de Vehículos */
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .table-custom thead th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 14px 20px;
+            border-bottom: 1.5px solid #e2e8f0;
+        }
+        .table-custom tbody td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+        .table-custom tbody tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Badges de Tipo */
+        .badge-tipo {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        .badge-carro  { background: #edf2f8; color: #12243b; border: 1px solid #cbd5e1; }
+        .badge-moto   { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .badge-camion { background: #fff8f0; color: #925313; border: 1px solid #f8dab8; }
+
+        .placa-badge {
+            font-family: monospace;
+            font-weight: 800;
+            font-size: 0.95rem;
+            background: #12243b;
+            color: #ffffff;
+            padding: 5px 12px;
+            border-radius: 8px;
+            letter-spacing: 1.5px;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(18, 36, 59, 0.15);
+            border: 1px solid #0a1524;
+        }
+
+        /* Botones de Acción */
+        .btn-cobrar {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 9px;
+            padding: 8px 16px;
+            font-size: 0.83rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+        }
+        .btn-cobrar:hover {
+            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            opacity: 0.95;
+            transform: translateY(-1px);
+            color: white;
+            box-shadow: 0 6px 14px rgba(16, 185, 129, 0.35);
+        }
+        .btn-cancelar {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            border-radius: 9px;
+            padding: 7px 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+        .btn-cancelar:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* Alertas Flash */
+        .alert-flash {
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+        }
+        .alert-flash-success {
+            background: #ecfdf5;
+            color: #065f46;
+            border-left: 5px solid #10b981;
+        }
+        .alert-flash-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border-left: 5px solid #ef4444;
+        }
+
+        .btn-search-pk {
+            background: #12243b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+        .btn-search-pk:hover {
+            background: #1c3554;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar Superior con Logo Oficial -->
+<nav class="top-navbar">
+    <div class="brand-group">
+        <a th:href="@{/vehiculos}" style="display: flex; align-items: center;">
+            <img th:src="@{/images/logo-white.png}" alt="Logo Oficial Parkend Pro" class="brand-logo">
+        </a>
+        <div class="brand-divider d-none d-md-block"></div>
+        <div class="brand-sub d-none d-md-block">
+            <span>Sistema Profesional de Estacionamiento</span>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <div class="user-pill">
+            <span class="user-dot"></span>
+            <span>Cuenta: <strong th:text="${usuarioActivo}">admin</strong></span>
+        </div>
+        <a th:href="@{/vehiculos/historial}" class="btn-nav-action">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Historial y Caja</span>
+        </a>
+        <a th:href="@{/usuarios}" class="btn-nav-action">
+            <i class="fa-solid fa-users-gear"></i>
+            <span>Usuarios</span>
+        </a>
+        <a th:href="@{/logout}" class="btn-nav-logout">
+            <i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Salir
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid py-4 px-lg-5">
+
+    <!-- Notificaciones Flash -->
+    <div th:if="${mensajeExito}" class="alert alert-flash alert-flash-success mb-4" th:text="${mensajeExito}"></div>
+    <div th:if="${mensajeError}" class="alert alert-flash alert-flash-error mb-4" th:text="${mensajeError}"></div>
+
+    <!-- Métricas del Dashboard con Paleta Oficial -->
+    <div class="row g-3 mb-4">
+        <!-- Vehículos Activos -->
+        <div class="col-md-4">
+            <div class="metric-card card-navy">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="metric-icon-box icon-navy">
+                        <img th:src="@{/images/logo-icon.png}" alt="Parkend" style="width: 28px; height: 28px; object-fit: contain;">
+                    </div>
+                    <div>
+                        <div class="metric-label">Vehículos en Cochera</div>
+                        <div class="metric-value" style="color: #12243b;" th:text="${#lists.size(vehiculos)}">0</div>
+                        <div class="metric-footnote">Cupos activos en tu cuenta</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Caja de la Sesión Actual -->
+        <div class="col-md-4">
+            <div class="metric-card card-green">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="metric-icon-box icon-green">
+                        <i class="fa-solid fa-cash-register"></i>
+                    </div>
+                    <div>
+                        <div class="metric-label">Caja Sesión Actual</div>
+                        <div class="metric-value text-success"
+                             th:text="${'$ ' + #numbers.formatDecimal(totalRecaudado, 1, 'POINT', 2, 'POINT')}">$ 0.00</div>
+                        <div class="metric-footnote">Cobrado en la sesión activa</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarifas Vigentes -->
+        <div class="col-md-4">
+            <div class="metric-card card-amber">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="metric-icon-box icon-amber">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <div>
+                        <div class="metric-label" style="color: #c77d2e;">Tarifas Oficiales Parkend</div>
+                        <div class="rates-display-group">
+                            <span class="rate-chip"><i class="fa-solid fa-motorcycle" style="color: #c77d2e;"></i> Moto <strong>$1.00</strong>/h</span>
+                            <span class="rate-chip"><i class="fa-solid fa-car" style="color: #12243b;"></i> Carro <strong>$2.00</strong>/h</span>
+                            <span class="rate-chip"><i class="fa-solid fa-truck" style="color: #64748b;"></i> Camión <strong>$4.00</strong>/h</span>
+                        </div>
+                        <div class="metric-footnote mt-2">
+                            Histórico total: <strong style="color: #12243b;" th:text="${'$ ' + #numbers.formatDecimal(totalHistorico, 1, 'POINT', 2, 'POINT')}">$ 0.00</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal: Formulario y Tabla -->
+    <div class="row g-4">
+
+        <!-- Formulario de Registro de Ingreso -->
+        <div class="col-lg-4">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <span class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-square-plus" style="color: #c77d2e; font-size: 1.15rem;"></i>
+                        <span>Registrar Ingreso</span>
+                    </span>
+                    <span class="badge border" style="background: #edf2f8; color: #12243b; font-size: 0.72rem; font-weight: 700;">ENTRADA</span>
+                </div>
+                <div class="card-body-custom">
+                    <form th:action="@{/vehiculos}" th:object="${vehiculoForm}" method="post">
+                        <div class="mb-3">
+                            <label for="placa" class="form-label">Placa / Matrícula</label>
+                            <input type="text" class="form-control" id="placa" th:field="*{placa}"
+                                   required maxlength="7" minlength="7" placeholder="Ej: ZZ999ZW"
+                                   pattern="[A-Za-z0-9]{7}" title="Formato estándar de 7 caracteres alfanuméricos (ej: ZZ999ZW)"
+                                   oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 7)"
+                                   style="font-family: monospace; font-size: 1.05rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;"/>
+                            <div class="form-text text-muted" style="font-size: 0.74rem;">
+                                <i class="fa-solid fa-circle-info me-1"></i> Formato estándar: 7 caracteres (ej. ZZ999ZW)
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="marca" class="form-label">Marca</label>
+                            <input type="text" class="form-control" id="marca" th:field="*{marca}"
+                                   required placeholder="Ej: Toyota" style="text-transform: uppercase;"/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modelo" class="form-label">Modelo</label>
+                            <input type="text" class="form-control" id="modelo" th:field="*{modelo}"
+                                   required placeholder="Ej: Corolla" style="text-transform: uppercase;"/>
+                        </div>
+                        <div class="mb-4">
+                            <label for="tipo" class="form-label">Tipo de Vehículo</label>
+                            <select class="form-select" id="tipo" th:field="*{tipo}" required>
+                                <option value="CARRO">Carro / Camioneta — $2.00 / h</option>
+                                <option value="MOTO">Motocicleta — $1.00 / h</option>
+                                <option value="CAMION">Camión / Pesado — $4.00 / h</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-registrar">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Confirmar Ingreso a Cochera</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Vehículos Activos -->
+        <div class="col-lg-8">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <span class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-car-side" style="color: #12243b;"></i>
+                        <span>Vehículos Estacionados (<strong th:text="${#lists.size(vehiculos)}">0</strong>)</span>
+                    </span>
+                    <!-- Búsqueda rápida por placa -->
+                    <form th:action="@{/vehiculos}" method="GET" class="d-flex align-items-center gap-2">
+                        <input type="text" class="form-control form-control-sm" name="placa"
+                               th:value="${param.placa}" placeholder="Buscar placa..." maxlength="7"
+                               style="width: 170px; font-size: 0.82rem; text-transform: uppercase;"/>
+                        <button type="submit" class="btn btn-sm btn-search-pk px-3">
+                            <i class="fa-solid fa-magnifying-glass me-1"></i> Buscar
+                        </button>
+                        <a th:href="@{/vehiculos}" class="btn btn-sm btn-light border" style="border-radius: 8px;">Limpiar</a>
+                    </form>
+                </div>
+
+                <!-- Estado Vacío -->
+                <div th:if="${#lists.isEmpty(vehiculos)}" class="text-center py-5 text-muted">
+                    <div class="mb-3">
+                        <img th:src="@{/images/logo-icon.png}" alt="Parkend" style="width: 56px; height: 56px; opacity: 0.65;">
+                    </div>
+                    <div class="fw-bold fs-6" style="color: #12243b;">No hay vehículos estacionados actualmente</div>
+                    <small>Registra una nueva entrada desde el formulario de la izquierda.</small>
+                </div>
+
+                <!-- Tabla de Vehículos -->
+                <div th:if="${!#lists.isEmpty(vehiculos)}" class="table-responsive">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Placa</th>
+                                <th>Vehículo</th>
+                                <th>Tipo</th>
+                                <th>Hora de Entrada</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="v : ${vehiculos}">
+                                <td><span class="placa-badge" th:text="${v.placa}">ZZ999ZW</span></td>
+                                <td>
+                                    <div class="fw-bold" style="color: #12243b;" th:text="${v.marca}">TOYOTA</div>
+                                    <div class="text-muted small" th:text="${v.modelo}">COROLLA</div>
+                                </td>
+                                <td>
+                                    <span class="badge-tipo"
+                                          th:classappend="${v.tipo == 'MOTO' ? 'badge-moto' : (v.tipo == 'CAMION' ? 'badge-camion' : 'badge-carro')}"
+                                          th:text="${v.tipo}">CARRO</span>
+                                    <div class="text-muted" style="font-size: 0.72rem; margin-top: 3px;"
+                                         th:text="${v.descripcionTipo}">Automóvil</div>
+                                </td>
+                                <td class="text-muted small">
+                                    <span th:text="${v.horaEntrada}">2026-09-30 08:00</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a th:href="@{/vehiculos/cobrar/{id}(id=${v.id})}" class="btn-cobrar">
+                                            <i class="fa-solid fa-receipt"></i>
+                                            <span>Cobrar y Salida</span>
+                                        </a>
+                                        <a th:href="@{/vehiculos/eliminar/{id}(id=${v.id})}"
+                                           class="btn-cancelar"
+                                           onclick="return confirm('¿Deseas anular este ingreso sin registrar cobro?');"
+                                           title="Anular ingreso"><i class="fa-solid fa-xmark"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

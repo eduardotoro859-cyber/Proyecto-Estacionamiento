@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Parkend Pro - Gestión y Control de Usuarios">
+    <title>Parkend Pro - Gestión de Usuarios</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/parkend.css}">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #12243b;
+            min-height: 100vh;
+        }
+
+        /* Navbar Superior */
+        .top-navbar {
+            background: linear-gradient(135deg, #0a1524 0%, #12243b 60%, #1b3554 100%);
+            padding: 12px 32px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(10, 21, 36, 0.25);
+            border-bottom: 3px solid #c77d2e;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .top-navbar .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+        .top-navbar .brand-logo {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+            transition: transform 0.2s ease;
+        }
+        .top-navbar .brand-logo:hover {
+            transform: scale(1.03);
+        }
+        .top-navbar .brand-divider {
+            width: 1.5px;
+            height: 34px;
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .top-navbar .brand-sub {
+            font-size: 0.88rem;
+            color: #e2e8f0;
+            letter-spacing: 0.4px;
+            font-weight: 600;
+        }
+        .top-navbar .user-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 30px;
+            padding: 6px 16px;
+            font-size: 0.84rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f8fafc;
+        }
+        .user-dot {
+            width: 9px;
+            height: 9px;
+            background: #c77d2e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #c77d2e;
+        }
+
+        .btn-nav-action {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .btn-nav-action:hover, .btn-nav-action.active {
+            background: #c77d2e;
+            border-color: #c77d2e;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(199, 125, 46, 0.35);
+        }
+        .btn-nav-logout {
+            background: rgba(239, 68, 68, 0.12);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .btn-nav-logout:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            transform: translateY(-1px);
+        }
+
+        /* Tarjetas de Resumen */
+        .metric-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 22px 24px;
+            box-shadow: 0 4px 18px rgba(18, 36, 59, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(18, 36, 59, 0.1);
+        }
+        .metric-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+        .metric-card.card-navy::after { background: #12243b; }
+        .metric-card.card-amber::after { background: #c77d2e; }
+        .metric-card.card-shield::after { background: #10b981; }
+
+        .metric-icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.45rem;
+        }
+        .icon-navy { background: #edf2f8; color: #12243b; }
+        .icon-amber { background: #fff8f0; color: #c77d2e; }
+        .icon-shield { background: #ecfdf5; color: #059669; }
+
+        .metric-label {
+            font-size: 0.76rem;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .metric-value {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #12243b;
+            margin-top: 3px;
+        }
+
+        /* Tarjetas de Contenido */
+        .content-card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(18, 36, 59, 0.05);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .card-header-custom {
+            background: #ffffff;
+            padding: 20px 24px;
+            border-bottom: 1.5px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body-custom {
+            padding: 24px;
+        }
+
+        /* Formularios */
+        .form-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .form-control {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 11px;
+            padding: 11px 14px;
+            font-size: 0.92rem;
+            transition: all 0.2s ease;
+            background-color: #f8fafc;
+        }
+        .form-control:focus {
+            background-color: #ffffff;
+            border-color: #12243b;
+            box-shadow: 0 0 0 3.5px rgba(18, 36, 59, 0.12);
+            outline: none;
+        }
+        .btn-crear-usuario {
+            background: linear-gradient(135deg, #12243b 0%, #1c3554 100%);
+            border: none;
+            color: white;
+            padding: 13px;
+            border-radius: 11px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 18px -4px rgba(18, 36, 59, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-crear-usuario:hover {
+            background: linear-gradient(135deg, #1c3554 0%, #12243b 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px -4px rgba(18, 36, 59, 0.45);
+            color: white;
+        }
+
+        /* Tabla de Usuarios */
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .table-custom thead th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 14px 20px;
+            border-bottom: 1.5px solid #e2e8f0;
+        }
+        .table-custom tbody td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+        .table-custom tbody tr:hover td {
+            background: #f8fafc;
+        }
+
+        .avatar-user-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #edf2f8 0%, #dbe4ef 100%);
+            color: #12243b;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-right: 12px;
+        }
+
+        .badge-id {
+            background: #f1f5f9;
+            color: #475569;
+            font-family: monospace;
+            font-weight: 700;
+            padding: 4px 9px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .badge-activo-sesion {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-operador {
+            background: #edf2f8;
+            color: #12243b;
+            border: 1px solid #cbd5e1;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .btn-delete-trigger {
+            background: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-delete-trigger:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-delete-disabled {
+            background: #f8fafc;
+            color: #94a3b8;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: not-allowed;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Alertas Flash */
+        .alert-flash {
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+        }
+        .alert-flash-success {
+            background: #ecfdf5;
+            color: #065f46;
+            border-left: 5px solid #10b981;
+        }
+        .alert-flash-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border-left: 5px solid #ef4444;
+        }
+
+        /* Modal de Confirmación de Borrado Seguro */
+        .modal-content-safe {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 25px 60px -15px rgba(10, 21, 36, 0.5);
+            overflow: hidden;
+        }
+        .modal-safe-header {
+            background: linear-gradient(135deg, #1f1015 0%, #2e1017 100%);
+            color: #ffffff;
+            padding: 24px 28px;
+            border-bottom: 2px solid #ef4444;
+            position: relative;
+        }
+        .modal-icon-shield {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.18);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #ef4444;
+            margin-bottom: 12px;
+        }
+        .code-delete-badge {
+            background: #ef4444;
+            color: #ffffff;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+        .delete-input-box {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px;
+            transition: all 0.2s ease;
+        }
+        .delete-input-box:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+            background: #ffffff;
+        }
+        .delete-input-box.matched {
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+            background: #f0fdf4;
+            color: #065f46;
+        }
+        .btn-confirm-delete {
+            background: #ef4444;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            transition: all 0.2s ease;
+        }
+        .btn-confirm-delete:hover:not(:disabled) {
+            background: #dc2626;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35);
+        }
+        .btn-confirm-delete:disabled {
+            background: #cbd5e1;
+            color: #64748b;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar Superior -->
+<nav class="top-navbar">
+    <div class="brand-group">
+        <a th:href="@{/vehiculos}" style="display: flex; align-items: center;">
+            <img th:src="@{/images/logo-white.png}" alt="Logo Oficial Parkend Pro" class="brand-logo">
+        </a>
+        <div class="brand-divider d-none d-md-block"></div>
+        <div class="brand-sub d-none d-md-block">
+            <span>Sistema Profesional de Estacionamiento</span>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <div class="user-pill">
+            <span class="user-dot"></span>
+            <span>Cuenta: <strong th:text="${usuarioActivo}">admin</strong></span>
+        </div>
+        <a th:href="@{/vehiculos}" class="btn-nav-action">
+            <i class="fa-solid fa-car"></i>
+            <span>Panel Principal</span>
+        </a>
+        <a th:href="@{/vehiculos/historial}" class="btn-nav-action">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Historial y Caja</span>
+        </a>
+        <a th:href="@{/usuarios}" class="btn-nav-action active">
+            <i class="fa-solid fa-users-gear"></i>
+            <span>Usuarios</span>
+        </a>
+        <a th:href="@{/logout}" class="btn-nav-logout">
+            <i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Salir
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid py-4 px-lg-5">
+
+    <!-- Mensajes Flash -->
+    <div th:if="${mensajeExito}" class="alert alert-flash alert-flash-success mb-4" th:text="${mensajeExito}"></div>
+    <div th:if="${mensajeError}" class="alert alert-flash alert-flash-error mb-4" th:text="${mensajeError}"></div>
+
+    <!-- Encabezado de la Sección -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
+        <div>
+            <h2 class="fw-bold mb-1" style="color: #12243b; font-size: 1.65rem;">
+                <i class="fa-solid fa-users-gear me-2" style="color: #c77d2e;"></i>Gestión y Control de Usuarios
+            </h2>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                Administra los accesos de operadores al sistema con protocolo de eliminación de seguridad de dos pasos.
+            </p>
+        </div>
+    </div>
+
+    <!-- Métricas de Usuarios -->
+    <div class="row g-3 mb-4">
+        <!-- Total de Usuarios -->
+        <div class="col-md-4">
+            <div class="metric-card card-navy">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="metric-icon-box icon-navy">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="metric-label">Usuarios Registrados</div>
+                        <div class="metric-value" th:text="${totalUsuarios}">1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usuario Activo -->
+        <div class="col-md-4">
+            <div class="metric-card card-amber">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="metric-icon-box icon-amber">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div>
+                        <div class="metric-label">Sesión Activa</div>
+                        <div class="metric-value" style="font-size: 1.35rem;" th:text="${usuarioActivo}">admin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seguridad Antiborrado -->
+        <div class="col-md-4">
+            <div class="metric-card card-shield">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="metric-icon-box icon-shield">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <div class="metric-label">Protocolo de Borrado</div>
+                        <div class="metric-value text-success" style="font-size: 1.15rem;">
+                            Protegido con "delete"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal: Formulario y Tabla -->
+    <div class="row g-4">
+        
+        <!-- Formulario: Registrar Nuevo Usuario -->
+        <div class="col-lg-4">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <div class="fw-bold" style="font-size: 1rem; color: #12243b;">
+                        <i class="fa-solid fa-user-plus me-2" style="color: #c77d2e;"></i>Registrar Usuario
+                    </div>
+                </div>
+                <div class="card-body-custom">
+                    <form th:action="@{/usuarios/crear}" method="post">
+                        <div class="mb-3">
+                            <label for="usernameInput" class="form-label">Nombre de Usuario</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 text-muted" style="border-radius: 11px 0 0 11px;">
+                                    <i class="fa-solid fa-user"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" id="usernameInput" name="username"
+                                       placeholder="Ej: operador1" required autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="passwordInput" class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 text-muted" style="border-radius: 11px 0 0 11px;">
+                                    <i class="fa-solid fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control border-start-0" id="passwordInput" name="password"
+                                       placeholder="Mínimo 4 caracteres" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="confirmPasswordInput" class="form-label">Confirmar Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 text-muted" style="border-radius: 11px 0 0 11px;">
+                                    <i class="fa-solid fa-shield-cat"></i>
+                                </span>
+                                <input type="password" class="form-control border-start-0" id="confirmPasswordInput" name="confirmPassword"
+                                       placeholder="Repite la contraseña" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-crear-usuario">
+                            <i class="fa-solid fa-circle-plus"></i>
+                            <span>Crear Nuevo Usuario</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla: Lista de Usuarios -->
+        <div class="col-lg-8">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="fw-bold" style="font-size: 1rem; color: #12243b;">
+                            <i class="fa-solid fa-list-check me-2" style="color: #c77d2e;"></i>Cuentas en el Sistema
+                        </div>
+                        <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 0.78rem;"
+                              th:text="${totalUsuarios} + ' cuentas'"></span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th style="width: 70px;">ID</th>
+                                <th>Nombre de Usuario</th>
+                                <th>Tipo de Cuenta</th>
+                                <th>Estado</th>
+                                <th style="width: 140px; text-align: center;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${usuarios}">
+                                <td>
+                                    <span class="badge-id" th:text="'#' + ${user.id}">#1</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-user-badge">
+                                            <i class="fa-solid fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark" th:text="${user.username}">admin</div>
+                                            <small class="text-muted" style="font-size: 0.75rem;">Operador Parkend Pro</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span th:if="${user.username.equalsIgnoreCase('admin')}" class="badge bg-dark px-2 py-1">
+                                        <i class="fa-solid fa-crown me-1 text-warning"></i> Administrador
+                                    </span>
+                                    <span th:unless="${user.username.equalsIgnoreCase('admin')}" class="badge-operador">
+                                        <i class="fa-solid fa-id-card-clip me-1"></i> Operador
+                                    </span>
+                                </td>
+                                <td>
+                                    <span th:if="${user.username.equalsIgnoreCase(usuarioActivo)}" class="badge-activo-sesion">
+                                        <span class="user-dot"></span> Sesión Actual
+                                    </span>
+                                    <span th:unless="${user.username.equalsIgnoreCase(usuarioActivo)}" class="text-muted" style="font-size: 0.85rem;">
+                                        <i class="fa-solid fa-circle text-secondary me-1" style="font-size: 0.5rem;"></i> Inactivo
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <!-- Si es el usuario en sesión activa, deshabilitar borrado para proteger la sesión -->
+                                    <div th:if="${user.username.equalsIgnoreCase(usuarioActivo)}">
+                                        <span class="btn-delete-disabled" title="No puedes eliminar la cuenta de tu sesión en curso">
+                                            <i class="fa-solid fa-ban"></i> En Uso
+                                        </span>
+                                    </div>
+                                    <!-- Si es otro usuario, permitir borrado abriendo el modal de confirmación -->
+                                    <div th:unless="${user.username.equalsIgnoreCase(usuarioActivo)}">
+                                        <button type="button" class="btn-delete-trigger"
+                                                th:data-id="${user.id}"
+                                                th:data-username="${user.username}"
+                                                onclick="abrirModalDesdeBoton(this)"
+                                                title="Eliminar usuario de forma segura">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                            <span>Eliminar</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(usuarios)}">
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    No hay usuarios registrados.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal Ventana Emergente: Confirmación de Eliminación Segura -->
+<div class="modal fade" id="modalEliminarUsuario" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-safe">
+            <div class="modal-safe-header text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="modal-icon-shield">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold mb-1 text-white" id="modalEliminarLabel">Confirmar Eliminación de Usuario</h5>
+                <p class="text-white-50 mb-0" style="font-size: 0.85rem;">
+                    Esta acción es destructiva e irreversible.
+                </p>
+            </div>
+            
+            <form id="formEliminarUsuario" method="post" action="">
+                <div class="modal-body p-4 text-center">
+                    <p class="mb-3" style="font-size: 0.95rem; color: #334155;">
+                        ¿Estás seguro de que deseas eliminar permanentemente al usuario
+                        <strong id="modalUsuarioNombre" class="text-danger fs-6 fw-bold"></strong>?
+                    </p>
+                    
+                    <div class="alert alert-light border border-danger-subtle p-3 mb-3 text-start" style="border-radius: 12px; background: #fffbfb;">
+                        <div class="d-flex gap-2">
+                            <i class="fa-solid fa-shield-alert text-danger mt-1"></i>
+                            <div style="font-size: 0.85rem; color: #475569;">
+                                Para prevenir eliminaciones accidentales, el sistema requiere confirmación explícita.
+                                Escribe la palabra <span class="code-delete-badge">delete</span> a continuación para desbloquear el botón de borrado:
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <input type="text" id="confirmDeleteInput" name="confirmacion" class="form-control delete-input-box"
+                               placeholder="Escribe 'delete'" autocomplete="off" spellcheck="false">
+                    </div>
+
+                    <div id="deleteHint" class="small text-muted py-1">
+                        <i class="fa-solid fa-info-circle me-1"></i>Escribe la palabra exacta para habilitar la confirmación.
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light px-4 py-3 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary px-3" data-bs-dismiss="modal" style="border-radius: 10px;">
+                        <i class="fa-solid fa-xmark me-1"></i> Cancelar
+                    </button>
+                    <button type="submit" id="btnConfirmarEliminar" class="btn btn-confirm-delete" disabled>
+                        <i class="fa-solid fa-trash-can me-1"></i> Confirmar Eliminación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const deleteModalElement = document.getElementById('modalEliminarUsuario');
+    const deleteModal = new bootstrap.Modal(deleteModalElement);
+    const deleteForm = document.getElementById('formEliminarUsuario');
+    const modalUsernameSpan = document.getElementById('modalUsuarioNombre');
+    const confirmInput = document.getElementById('confirmDeleteInput');
+    const confirmBtn = document.getElementById('btnConfirmarEliminar');
+    const deleteHint = document.getElementById('deleteHint');
+
+    function abrirModalDesdeBoton(btn) {
+        const id = btn.getAttribute('data-id');
+        const username = btn.getAttribute('data-username');
+        abrirModalEliminar(id, username);
+    }
+
+    function abrirModalEliminar(id, username) {
+        deleteForm.action = '/usuarios/eliminar/' + id;
+        modalUsernameSpan.textContent = username;
+        confirmInput.value = '';
+        confirmInput.classList.remove('matched');
+        confirmBtn.disabled = true;
+        deleteHint.innerHTML = '<i class="fa-solid fa-circle-exclamation text-danger me-1"></i>Escribe la palabra exacta <strong>delete</strong> para habilitar el botón.';
+        deleteHint.className = 'small text-danger py-1';
+        
+        deleteModal.show();
+        setTimeout(() => confirmInput.focus(), 350);
+    }
+
+    // Validación reactiva en tiempo real al escribir
+    confirmInput.addEventListener('input', function() {
+        const val = this.value.trim().toLowerCase();
+        if (val === 'delete') {
+            confirmBtn.disabled = false;
+            confirmInput.classList.add('matched');
+            deleteHint.innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i>Palabra de seguridad confirmada. Puedes proceder.';
+            deleteHint.className = 'small text-success fw-bold py-1';
+        } else {
+            confirmBtn.disabled = true;
+            confirmInput.classList.remove('matched');
+            deleteHint.innerHTML = '<i class="fa-solid fa-circle-exclamation text-danger me-1"></i>Escribe la palabra exacta <strong>delete</strong> para habilitar el botón.';
+            deleteHint.className = 'small text-danger py-1';
+        }
+    });
+
+    // Limpieza al cerrar modal
+    deleteModalElement.addEventListener('hidden.bs.modal', function() {
+        confirmInput.value = '';
+        confirmInput.classList.remove('matched');
+        confirmBtn.disabled = true;
+    });
+</script>
+</body>
+</html>

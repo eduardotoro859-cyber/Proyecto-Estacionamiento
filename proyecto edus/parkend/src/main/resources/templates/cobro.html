@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkend Pro - Ticket de Cobro y Salida</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/parkend.css}">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #12243b;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+        .ticket-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 45px -10px rgba(18, 36, 59, 0.18);
+            width: 100%;
+            max-width: 530px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .ticket-header {
+            background: linear-gradient(135deg, #0a1524 0%, #12243b 60%, #1b3554 100%);
+            color: #ffffff;
+            padding: 28px 24px 22px;
+            text-align: center;
+            border-bottom: 3px solid #c77d2e;
+        }
+        .ticket-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+        .ticket-body {
+            padding: 30px 26px;
+        }
+        .placa-badge {
+            font-family: monospace;
+            font-weight: 800;
+            font-size: 1.65rem;
+            background: #12243b;
+            color: #ffffff;
+            padding: 7px 20px;
+            border-radius: 10px;
+            letter-spacing: 2px;
+            display: inline-block;
+            box-shadow: 0 3px 8px rgba(18, 36, 59, 0.2);
+            border: 1.5px solid #0a1524;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 0;
+            border-bottom: 1px dashed #e2e8f0;
+            font-size: 0.92rem;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            color: #64748b;
+            font-weight: 600;
+        }
+        .info-value {
+            font-weight: 700;
+            color: #12243b;
+        }
+        .total-box {
+            background: #fff8f0;
+            border: 1.5px solid #f8dab8;
+            border-radius: 16px;
+            padding: 20px 22px;
+            margin: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-amount {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: #c77d2e;
+        }
+        .btn-confirm {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 14px;
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-confirm:hover {
+            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            transform: translateY(-1px);
+            color: #ffffff;
+            box-shadow: 0 12px 24px -5px rgba(16, 185, 129, 0.5);
+        }
+        .btn-cancel {
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 11px;
+            border-radius: 12px;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            margin-top: 12px;
+            transition: all 0.2s ease;
+        }
+        .btn-cancel:hover {
+            background: #f8fafc;
+            color: #12243b;
+            border-color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-card">
+        <div class="ticket-header">
+            <img th:src="@{/images/logo-white.png}" alt="Parkend Pro Logo" class="ticket-logo">
+            <h4 class="mb-1 fw-bold">Ticket de Liquidación y Salida</h4>
+            <small class="opacity-75">Operador en turno: <strong th:text="${usuarioActivo}">admin</strong></small>
+        </div>
+
+        <div class="ticket-body">
+            <div class="text-center mb-4">
+                <span class="placa-badge" th:text="${ticket.placa}">ZZ999ZW</span>
+                <div class="mt-2 fw-bold small">
+                    <span class="badge me-1"
+                          style="background: #edf2f8; color: #12243b; border: 1px solid #cbd5e1;"
+                          th:text="${ticket.tipo}">CARRO</span>
+                    <span style="color: #475569;" th:text="${ticket.marca + ' ' + ticket.modelo}">TOYOTA COROLLA</span>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label"><i class="fa-regular fa-clock me-1 text-muted"></i> Hora de Entrada</span>
+                <span class="info-value" th:text="${ticket.horaEntrada}">2026-09-30 08:00:00</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><i class="fa-regular fa-clock me-1 text-muted"></i> Hora de Salida</span>
+                <span class="info-value" th:text="${ticket.horaSalida}">2026-09-30 09:30:00</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><i class="fa-solid fa-stopwatch me-1" style="color: #c77d2e;"></i> Tiempo Transcurrido</span>
+                <span class="info-value" style="color: #c77d2e;" th:text="${ticket.tiempoFormateado}">1 hora(s) y 30 minuto(s)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><i class="fa-solid fa-tag me-1 text-muted"></i> Tarifa Vigente</span>
+                <span class="info-value" th:text="${'$ ' + #numbers.formatDecimal(ticket.tarifaPorHora, 1, 'POINT', 2, 'POINT') + ' / h'}">$ 2.00 / h</span>
+            </div>
+
+            <!-- Total a Pagar -->
+            <div class="total-box">
+                <div>
+                    <div style="font-size: 0.8rem; font-weight: 800; color: #ad671e; text-transform: uppercase; letter-spacing: 0.5px;">Total a Cobrar</div>
+                    <small class="text-muted">Fracción computada como hora completa</small>
+                </div>
+                <div class="total-amount" th:text="${'$ ' + #numbers.formatDecimal(ticket.totalPagar, 1, 'POINT', 2, 'POINT')}">$ 4.00</div>
+            </div>
+
+            <!-- Formulario de Cobro -->
+            <form th:action="@{/vehiculos/cobrar}" method="POST">
+                <input type="hidden" name="vehiculoId" th:value="${ticket.vehiculoId}" />
+                <input type="hidden" name="placa" th:value="${ticket.placa}" />
+                <input type="hidden" name="marca" th:value="${ticket.marca}" />
+                <input type="hidden" name="modelo" th:value="${ticket.modelo}" />
+                <input type="hidden" name="tipo" th:value="${ticket.tipo}" />
+                <input type="hidden" name="horaEntrada" th:value="${ticket.horaEntrada}" />
+                <input type="hidden" name="horaSalida" th:value="${ticket.horaSalida}" />
+                <input type="hidden" name="minutosTotales" th:value="${ticket.minutosTotales}" />
+                <input type="hidden" name="tarifaPorHora" th:value="${ticket.tarifaPorHora}" />
+                <input type="hidden" name="totalPagar" th:value="${ticket.totalPagar}" />
+
+                <button type="submit" class="btn-confirm">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Confirmar Pago y Registrar Salida</span>
+                </button>
+                <a th:href="@{/vehiculos}" class="btn-cancel">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Volver sin Cobrar
+                </a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
